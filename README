@@ -1,0 +1,8 @@
+- Plots to be included in the data visualization section of the paper are in
+  ./plot.
+  
+- The latex conversion of the jupyter notebook from which to get the highlighted
+  code is in ./paper/code.tex and the sample compiled version is in
+  ./paper/code.pdf
+  
+- What is left is to write the paper and integrate the code snippets and plots.
