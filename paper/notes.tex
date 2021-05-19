@@ -67,11 +67,11 @@
 %% \section{comparaison des profils}
 
 \section{Carte Radar}
-For comparion of the time allocated to different tasks between individuals of
-different groups we have choosen the method of radar chart. The following code
-snippet shows how we plotted these charts for all 28 groups, shown in the
-annex. Along with a radar chart containing all groups containing all groups
-shown at the end of this section.
+Pour comparer le temps alloué aux différentes tâches entre les individus de
+différents groupes, nous avons choisi la méthode du graphique radar. Le code
+suivant suivant montre comment nous avons tracé ces graphiques pour les 28
+groupes, présentés dans l'annexe. Un graphique radar contenant tous les groupes
+est présenté à la fin de cette section.
 \begin{minted}{R}
 library(fmsb)
 
@@ -91,17 +91,18 @@ For this we have used the library \textit{fmsb} which includes the function
 \textit{radarchart(...)} from which the plots were drawn. Figure
 \ref{fig:radar-chart-all} shows a comparison of time distributions between all
 groups present in the dataset. The individual radar charts can be found in the
-annex \ref{section:annex}
+annex \ref{section:annex}.
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.55]{../plot/radar-chart-all.pdf}
-  \caption{Comparison in between all profile groups}
+  \includegraphics[scale=0.4]{../plot/radar-chart-all.pdf}
+  \caption{Comparaison entre tous les groupes de profils}
   \label{fig:radar-chart-all}
 \end{figure}
 \section{Graphique à barres}
-Since, radar charts that incorporate reference values tend to look rather
-clutered we have also chosen to visualize time distribution with the use of bar
-plots, in which we have included the time percentages in the y axis.
+Étant donné que les graphiques radar qui intègrent des valeurs de référence ont
+tendance à avoir une allure plutôt encombrée, nous avons également choisi de
+visualiser la distribution du temps à l'aide de diagrammes à barres, dans
+lesquels nous avons inclus les pourcentages de temps sur l'axe des ordonnées.
 \begin{minted}{R}
 for (i in 1:28) {
     pdf(paste("plot/bar-plot/bar-plot-", tolower(df01$ID[i]), ".pdf", sep=""))
@@ -110,40 +111,41 @@ for (i in 1:28) {
     dev.off()
 }
 \end{minted}
-The generated plots are in the annex \ref{section:annex}
+Les graphiques générés sont dans l'annexe \ref{section:annex}
 \section{ACP}
-The following line performs the PCA which we use in the following clustering
-section for visualization of instance clustering results.
+La ligne suivante effectue l'ACP que nous utilisons dans la section suivante de
+clustering pour la visualisation des résultats.
 \begin{minted}{R}
   pca = prcomp(df03)
 \end{minted}
-The percentages of the explained variance for each principal component is gotten
-through the following command.
+Les pourcentages de la variance expliquée pour chaque composante principale sont
+obtenus par la commande suivante.
 \begin{minted}{R}
   summary(pca)$importance[2,]
 \end{minted}
-which produces the following output:\\\\ \texttt{PC1:\ 0.8804 PC2:\ 0.07166
+qui produit le résultat suivant:\\\\ \texttt{PC1:\ 0.8804 PC2:\ 0.07166
   PC3:\ 0.02654 PC4:\ 0.01521 PC5:\ 0.0032 PC6:\ 0.00158 \\PC7:\ 0.00072
-  PC8:\ 0.00043 PC9:\ 0.00026 PC10:\ 0}\\\\ As we can see a little more that
-95\% of the variance is explained by the two first principal components. Which
-means that the two dimensional projection of the data will be of fairly good
-quality.\par The followng plots a graphical representation of the above output
+  PC8:\ 0.00043 PC9:\ 0.00026 PC10:\ 0}\\\\  Comme on peut le voir un peu plus
+que 95\% de la variance est expliquée par les deux premières composantes
+principales. Ce qui signifie que la projection bidimensionnelle des données sera
+d'assez bonne qualité. Le graphique suivant est une représentation graphique de
+la sortie ci-dessus.
 \begin{minted}{R}
 pdf("plot/principal-component-explained-variance.pdf")
 barplot(summary(pca)$importance[2,],ylab="Explained Variance Proportion",
         ylim=c(0,1), main="Principal Component Explained Variance")
 dev.off()   
 \end{minted}
-The resulting plot can be seen in figure
+Le graphique résultant peut être vu dans la figure
 \ref{fig:principal-component-explained-variance}.\par
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.5]{../plot/principal-component-explained-variance.pdf}
+  \includegraphics[scale=0.4]{../plot/principal-component-explained-variance.pdf}
   \caption{Principal component explained variance}
   \label{fig:principal-component-explained-variance}
 \end{figure}
-The following code snippet shows the projection of all attributes into the two
-first principal components.
+L'extrait de code suivant montre la projection de tous les attributs dans les
+deux premières composantes principales.
 \begin{minted}{R}
 pdf("plot/pca-attribute-projection.pdf")
 library("factoextra")
@@ -151,17 +153,11 @@ fviz_pca_var(pca, col.var = "cos2", col.ind = "cos2",
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 dev.off()
 \end{minted}
-As show in figure \ref{fig:pca-attribute-projection}. In this one we see that
-the two best projected attributes are by far the PROF and MENA attributes,
-corresponding respectively to the attributes designating the time spent working
-and cleaning.\par Next, the visualization of the instance projection was done
-through the following code.
-\begin{figure}[h]
-  \centering
-  \includegraphics[scale=0.4]{../plot/pca-attribute-projection.pdf}
-  \caption{PCA attribute projection}
-  \label{fig:pca-attribute-projection}
-\end{figure}
+Comme le montre la figure \ref{fig:pca-projection}. Dans celle-ci,
+nous voyons que les deux attributs les mieux projetés sont de loin les attributs
+PROF et MENA, correspondant respectivement aux attributs désignant le temps
+passé à travailler et de nettoyage.\par Puis, la visualisation de la projection de
+l'instance a été réalisée à travers le code suivant.
 \begin{minted}{R}
 pdf("plot/pca-instance-projection.pdf")
 library("factoextra")
@@ -169,28 +165,116 @@ fviz_pca_ind(pca, col.var = "cos2", col.ind = "cos2",
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 dev.off()  
 \end{minted}
-The resulting plot is in figure \ref{fig:pca-instance-projection}.
+Le graphique résultant est dans la figure \ref{fig:pca-projection}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{../plot/pca-attribute-projection.pdf}
+  \includegraphics[scale=0.4]{../plot/pca-instance-projection.pdf}
+  \caption{projection d'attributs (à gauche) et projection d'instances (à droite)}
+  \label{fig:pca-projection}
+\end{figure}
+D'après les pourcentages de variance expliquée, nous constatons que la plupart
+des instances ont une bonne qualité de projection.
+\section{Clustering}
+Pour analyser les similitudes entre les profils, nous avons regroupé les
+instances à l'aide de l'algorithme d'apprentissage automatique KMeans. Cet
+algorithme nécessite d'abord de définir manuellement le nombre de clusters dans
+lesquels les instances seront regroupées. Ceci est fait dans le code suivant.
+\begin{minted}{R}
+pdf("plot/kmeans-inertia.pdf")
+fviz_nbclust(df03, kmeans, method="wss")
+dev.off()
+pdf("plot/kmeans-silhouette.pdf")
+fviz_nbclust(df03, kmeans, method="silhouette")
+dev.off()
+pdf("plot/kmeans-gap-stat.pdf")
+fviz_nbclust(df03, kmeans, method="gap_stat")
+dev.off()  
+\end{minted}
+Les trois graphiques sont présentés dans la figure \ref{fig:cluster-count}. Dans
+ceux-ci, la courbe de score Silhouette et la statistique d'écart montrent que
+deux sont une bonne quantité de clusters. Alors que la courbe du coude montre
+également que trois est une bonne option. Ainsi, en prenant tous les résultats
+en compte, nous avons choisi deux clusters pour les suivants analytique.\par
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.4]{../plot/pca-instance-projection.pdf}
-  \caption{PCA instance projection}
-  \label{fig:pca-instance-projection}
+  \includegraphics[scale=0.3]{../plot/kmeans-inertia.pdf}
+  \includegraphics[scale=0.3]{../plot/kmeans-silhouette.pdf}
+  \includegraphics[scale=0.3]{../plot/kmeans-gap-stat.pdf}
+  \caption{Courbe du coude (droite), scores de la silhouette (centre), statistiques de l'écart (droite)}
+  \label{fig:cluster-count}
 \end{figure}
-As according to the percentages of explained variance we see that most instance
-have a good projection quality.
-\section{Clustering}
-To analyse similarities in between the group profiles themselves we performed
-clustered the instances throught the use of the KMeans Machine Learning
-algorithm.\par This algorithm first requires to manually set the number of
-clusters in which the instances shall be grouped together.
-%% \section{Annex}
-%% \label{section:annex}
-%% \subsection{Carte Radar}
-%% \foreach\x in {1, ..., 28}{%
-%%   \includegraphics[height=5.4cm]{../plot/radar-chart/radar-chart-\x.pdf}
-%% }
-%% \subsection{Graphique à barres}
-%% \foreach\x in {1, ..., 28}{%
-%%   \includegraphics[height=5.4cm]{../plot/bar-plot/bar-plot-\x.pdf}
-%% }
+Enfin, le clustering lui-même a été effectué avec l'extrait de code suivant.
+\begin{minted}{R}
+pdf("plot/clusters.pdf")
+km = kmeans(df03, centers=2, nstart=25)
+fviz_cluster(km, data=df03)
+dev.off()
+\end{minted}
+Le résultat est dans la figure \ref{fig:clusters}.
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.4]{../plot/clusters.pdf}
+  \caption{Clustering}
+  \label{fig:clusters}
+\end{figure}
+Pour le nombre d'instances par cluster, nous avons.
+\begin{minted}{R}
+print(paste("cluster01:", nrow(df01[km$cluster==1,])))
+print(paste("cluster02:", nrow(df01[km$cluster==2,])))
+\end{minted}
+ce qui donne le résultat suivant:\\\\
+\texttt{[1] "cluster01: 21"}\\
+\texttt{[1] "cluster02: 7"}\\\\
+Nous constatons qu'il n'y a pas un nombre uniforme d'instances par groupe, ce
+qui signifie que l'algorithme ML a travaillé sur un certain type d'intuition
+obtenue à partir des données lors du regroupement.\par Ensuite, pour voir à quel
+point les instances d'un même cluster sont réellement similaires, nous
+échantillonnons deux instances de clusters différents puis deux instances du
+même cluster et nous les comparons. La figure suivante montre d'abord la
+comparaison entre deux instances de clusters différents, puis la comparaison de
+deux instances du même cluster.\par
+\begin{minted}{R}
+pdf("plot/fne-hme-comparison.pdf")
+instanceIndices = c(24,25)
+df04 <- rbind(rep(max(df03),28), rep(min(df03),28), df03[instanceIndices,])
+title = paste(df01$ID[instanceIndices[1]],"-",df01$ID[instanceIndices[2]],
+              "Comparison", sep=" ")
+radarchart(df04, title=title)
+dev.off()
+pdf("plot/hme-fay-comparison.pdf")
+instanceIndices = c(25,16)
+df04 <- rbind(rep(max(df03),28), rep(min(df03),28), df03[instanceIndices,])
+title = paste(df01$ID[instanceIndices[1]],"-",df01$ID[instanceIndices[2]],
+              "Comparison", sep=" ")
+radarchart(df04, title=title)
+dev.off()
+\end{minted}
+Le résultat est dans la figure \ref{fig:fne-hme-comparison}.\par
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.4]{../plot/fne-hme-comparison.pdf}
+  \includegraphics[scale=0.4]{../plot/hme-fay-comparison.pdf}
+  \caption{Comparaison par cluster}
+  \label{fig:fne-hme-comparison}
+\end{figure}
+Dans le graphique de gauche, nous voyons qu'entre ces deux cas, il y a une
+différence considérable entre le temps passé à nettoyer et à travailler. Alors
+que le cas le plus à droite est assez similaire tout du long.
+\section{Critiques}
+La principale critique à laquelle je peux penser est liée au fait que les
+données ont déjà été traitées et que les individus ont déjà été regroupés comme
+indiqué dans la description des données. Ce qui nous laisse avec la seule option
+de faire une analyse secondaire, contenant tous les possibles biais de l'analyse
+précédente.
+\section{Annex}
+\label{section:annex}
+\subsection{Carte Radar}
+\foreach\x in {1, ..., 28}{%
+  \includegraphics[height=5.4cm]{../plot/radar-chart/radar-chart-\x.pdf}
+}
+\subsection{Graphique à barres}
+\foreach\x in {1, ..., 28}{%
+  \includegraphics[height=5.4cm]{../plot/bar-plot/bar-plot-\x.pdf}
+}
 \end{document}
