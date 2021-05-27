@@ -25,6 +25,7 @@
 \usepackage{natbib}
 \usepackage{pdfpages}
 \usepackage{pgffor}
+\usepackage{minted}
 
 \setlength{\parindent}{11pt}
 \setlength{\parskip}{0pt}
@@ -57,11 +58,82 @@
     \newpage
   \end{center}
 \end{titlepage}
-%% \section{Description du jeu de données}
-%% \section{Chargement des données}
-%% \section{Normalisation des distributions}
-%% \section{Analyse des boîtes à moustaches}
-%% \section{Matrice de corrélation}
+
+
+\section{Description du jeu de données}
+
+Ce jeu de données représente une enquête mettant en valeur le temps passé dans multiples activités au cours d’une journée (Budget/Temps).
+
+La population étudiée provient de plusieurs pays différents et porte sur des hommes et des femmes de différentes situations.
+
+\section{Chargement des données}
+
+\begin{minted}{R}
+
+path = "./Enquete_Budget_Temps.xlsx"
+library("readxl")
+df01 <- read_excel(path)
+
+summary(df01)
+
+\end{minted}
+
+On charge les données depuis le fichier excel.
+
+\section{Normalisation des distributions}
+
+\begin{minted}{R}
+
+df02 <- df01
+df02[, 2:11] <- df01[, 2:11] / 2400
+
+\end{minted}
+
+On normalise les données en divisant chacune des valeurs numériques par 2400 ce qui nous permet une meilleur distribution afin d'obtenir de meilleurs résultats lors des différentes analyses statistiques que nous allons effectuer par la suite.
+
+\newpage
+
+\section{Analyse des boîtes à moustaches}
+\begin{minted}{R}
+
+df03 <- df02[2:11]
+
+pdf("plot/box-plot.pdf")
+boxplot(df03, use.cols=FALSE, las=2, ylab="Time percentage", main="Analytics of time spent per-activity")
+dev.off()
+
+\end{minted}
+
+\includegraphics[scale=0.8]{../plot/box-plot.pdf}
+
+Le diagramme en boîte à moustache est très utile notamment pour observer la dispersion des valeurs sur certaines variables. Ainsi, nous pouvons voir que certaines activités comme aller aux toilettes qui sont du ressort de la nécessité, sont une activité ayant très très peu de variance. Effectivement, chaque individus quelque soit sa classe a les mêmes besoins. On peut également l'observer au niveau du sommeil ou des repas, où l'écart est faible avec des valeurs relativements centrées.
+
+
+Les valeures de certaines activitées sont bien plus dispersées, comme c'est le cas pour le travail ou le ménage et possède des temps bien plus conséquents que les autres activitées car étant considérées comme essentielles d'y consacrer du temps de vie.
+
+
+\newpage
+
+\section{Matrice de corrélation}
+
+\begin{minted}{R}
+
+pdf("plot/correlation-matirx.pdf")
+library("PerformanceAnalytics")
+chart.Correlation(df03, histogram=TRUE, title="hello")
+
+mtext("Correlation Matrix", side=3, line=3)
+dev.off()
+
+\end{minted}
+
+
+\includegraphics[scale=0.8]{../plot/correlation-matirx.pdf}
+
+
+Cette matrice de corrélation met en évidence bon nombres de facteurs, typiquement, avec une corrélation casi linéaire positive de 0.93 entre le temps consacré au travail et celui passé dans les transports. En effet pour aller travailler il faut se déplacer. 
+
+L'activité professionnelle étant très chronovore, elle est également en corrélation négative avec le ménage ou les enfants, en effet lorsque l'on est sur son lieu de travail, on est pas chez soi . Elle l'est d'ailleurs avec la plupart des autres activitées comme les activitées primaires même si elle influe également sur le temps de sommeil, en effet le travail pose des contraintes de sommeil plus stricts pouvant conduire les gens à moins dormir.
 
 %% \section{Clustering}
 %% \section{comparaison des profils}
@@ -98,6 +170,9 @@ annex \ref{section:annex}.
   \caption{Comparaison entre tous les groupes de profils}
   \label{fig:radar-chart-all}
 \end{figure}
+
+\newpage
+
 \section{Graphique à barres}
 Étant donné que les graphiques radar qui intègrent des valeurs de référence ont
 tendance à avoir une allure plutôt encombrée, nous avons également choisi de
